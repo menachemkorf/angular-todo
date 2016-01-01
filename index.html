@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="todo">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="app.js"></script>
+</head>
+<body ng-controller="TodoController">
+
+    <form ng-submit="addTodo()">
+        <input type="text" ng-model="newTodo" required>
+        <input type="submit" id="submit" value="Add">
+    </form>
+    <button ng-click="clearCompleted()">clear completed</button>
+    <ul>
+        <li ng-repeat="todo in todoList" ng-class="{completed: todo.done}">
+            <span>{{todo.title}}</span>
+            <input type="checkbox" ng-model="todo.done">
+        </li>
+    </ul>
+</body>
+</html>
