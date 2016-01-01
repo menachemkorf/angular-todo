@@ -1,9 +1,13 @@
 var app = angular.module('todo', []);
 
-app.controller('TodoController', ['$scope','$filter', function($scope, $filter) {
-    $scope.todoList = [
+app.service('todosService', function() {
+    this.todos = [
         {title: 'Build a todo app', done: false}
     ];
+});
+
+app.controller('TodoController', ['$scope','$filter','todosService', function($scope, $filter, todosService) {
+    $scope.todoList = todosService.todos;
     $scope.newTodo = '';
     $scope.addTodo = function() {
         $scope.todoList.push({
@@ -19,3 +23,27 @@ app.controller('TodoController', ['$scope','$filter', function($scope, $filter) 
     };
 
 }]);
+
+app.directive('addTodo', function() {
+    return {
+        restrict: 'E',
+        templateUrl: 'add-todo.html',
+        controller: 'TodoController'
+    };
+});
+
+app.directive('clearCompleted', function() {
+    return {
+        restrict: 'E',
+        templateUrl: 'clear-completed.html',
+        controller: 'TodoController'
+    };
+});
+
+app.directive('todos', function() {
+    return {
+        restrict: 'E',
+        templateUrl: 'todo-list.html',
+        controller: 'TodoController'
+    };
+});
