@@ -1,6 +1,16 @@
+<form ng-submit="addTodo()">
+    <input type="text" ng-model="newTodo" required>
+    <input type="submit" id="submit" value="Add">
+</form>
+<button ng-click="clearCompleted()">clear completed</button>
+
+
+
+<div ng-show="!todoList.length">You have no todos.</div>
 <ul>
-    <li ng-repeat="todo in todoList" ng-class="{completed: todo.done}">
+    <li ng-repeat="todo in todoList track by $index" ng-class="{completed: todo.done}">
         <span>{{todo.title}}</span>
-        <input type="checkbox" ng-model="todo.done">
+        <input type="checkbox" ng-model="todo.done" ng-click="markComplete($index, todo.done)">
+        <button ng-click="deleteTodo($index)">x</button>
     </li>
 </ul>
