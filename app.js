@@ -1,49 +1,74 @@
 var app = angular.module('todo', []);
 
 app.service('todosService', function() {
-    this.todos = [
-        {title: 'Build a todo app', done: false}
-    ];
+
+    var loadModel = function() {
+        return localStorage['todos'] ? JSON.parse(localStorage['todos']) : [];
+    };
+
+    var saveModel = function() {
+        localStorage['todos'] = JSON.stringify(model);
+    };
+
+    this.getTodos = function() {
+        return model;
+    };
+
+    this.addTodo = function(todo) {
+        model.push({title: todo, done: false});
+        saveModel();
+    };
+
+    this.markComplete = function(i, done) {
+        model[i].done = done;
+        saveModel();
+    };
+
+    this.deleteTodo = function(i) {
+        model.splice(i, 1);
+        saveModel();
+    }
+
+    this.clearCompleted = function() {
+        model = model.filter(function(todo) {
+            return !todo.done;
+        });
+        saveModel();
+    };
+
+    var model = loadModel();
 });
 
-app.controller('TodoController', ['$scope','$filter','todosService', function($scope, $filter, todosService) {
-    $scope.todoList = todosService.todos;
+
+
+app.controller('TodoController', ['$scope','todosService', function($scope, todosService) {
+    $scope.todoList = todosService.getTodos();
     $scope.newTodo = '';
+
     $scope.addTodo = function() {
-        $scope.todoList.push({
-            title: $scope.newTodo,
-            done: false
-        });
+        todosService.addTodo($scope.newTodo);
         $scope.newTodo = '';
     };
 
+    $scope.markComplete = function(todo, done) {
+        todosService.markComplete(todo, done);
+    };
+
+    $scope.deleteTodo = function(todo) {
+        todosService.deleteTodo(todo);
+    };
+
     $scope.clearCompleted = function() {
-        //filter 'todolist' to only contain objects with property 'done' set to false.
-        $scope.todoList = $filter('filter')($scope.todoList, {done: false});
+        todosService.clearCompleted();
+        $scope.todoList = todosService.getTodos();
     };
 
 }]);
 
-app.directive('addTodo', function() {
-    return {
-        restrict: 'E',
-        templateUrl: 'add-todo.html',
-        controller: 'TodoController'
-    };
-});
-
-app.directive('clearCompleted', function() {
-    return {
-        restrict: 'E',
-        templateUrl: 'clear-completed.html',
-        controller: 'TodoController'
-    };
-});
-
 app.directive('todos', function() {
     return {
         restrict: 'E',
-        templateUrl: 'todo-list.html',
+        templateUrl: 'partials/todo-list.html',
         controller: 'TodoController'
     };
 });
