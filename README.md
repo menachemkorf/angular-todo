@@ -14,4 +14,4 @@ A simple todo app (hello angular).
 
 All todos are stored in the browser's localStorage.
 
-The app makes use of angular's built-in directives, custom directives, controllers, services, scopes.
+The app makes use of angular's built-in directives, custom directives, controllers, services and scopes.
